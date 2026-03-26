@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sb Maya Hai ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;600&family=Dancing+Script:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rose:#ff6b9d;--deep-rose:#c2185b;--gold:#ffd700;
+    --cream:#fff8f0;--dark:#0a0010;--lavender:#b388ff;--nav-h:70px;
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{font-family:'Cormorant Garamond',serif;background:var(--dark);color:var(--cream);overflow-x:hidden;}
+
+  @media(hover:hover)and(pointer:fine){body{cursor:none;}#cursor,#cursor-trail{display:block;}}
+  @media(hover:none),(pointer:coarse){#cursor,#cursor-trail{display:none;}}
+  #cursor{width:12px;height:12px;background:var(--rose);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+  #cursor-trail{width:30px;height:30px;border:1px solid rgba(255,107,157,.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .15s ease;}
+  #stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+  /* ── NAVBAR ── */
+  nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;
+    padding:0 clamp(16px,5vw,60px);display:flex;justify-content:space-between;align-items:center;
+    background:rgba(10,0,16,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(255,107,157,.18);}
+  .nav-logo{font-family:'Dancing Script',cursive;font-size:clamp(1.3rem,4.5vw,1.9rem);color:var(--rose);
+    text-shadow:0 0 22px rgba(255,107,157,.9);letter-spacing:1px;flex-shrink:0;z-index:1002;line-height:1.2;}
+  .nav-logo span{display:block;font-size:clamp(.55rem,1.8vw,.7rem);font-family:'Cinzel',serif;letter-spacing:4px;color:rgba(255,107,157,.6);text-shadow:none;}
+  .nav-links{display:flex;gap:clamp(12px,2.2vw,36px);list-style:none;}
+  .nav-links a{font-family:'Cinzel',serif;font-size:clamp(.52rem,1.1vw,.72rem);letter-spacing:2px;
+    text-transform:uppercase;color:rgba(255,248,240,.65);text-decoration:none;position:relative;transition:color .3s;white-space:nowrap;}
+  .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+    background:var(--rose);transition:width .3s;box-shadow:0 0 8px var(--rose);}
+  .nav-links a:hover,.nav-links a.active{color:var(--rose);}
+  .nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+
+  .hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;
+    width:36px;height:36px;background:none;border:none;cursor:pointer;z-index:1002;padding:4px;}
+  .hamburger span{display:block;height:1.5px;background:var(--rose);border-radius:2px;
+    transition:all .35s cubic-bezier(.23,1,.32,1);box-shadow:0 0 6px rgba(255,107,157,.6);}
+  .hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+  .hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+  .mobile-menu{display:none;position:fixed;inset:0;background:rgba(10,0,16,.97);
+    backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);z-index:1001;
+    flex-direction:column;justify-content:center;align-items:center;gap:30px;opacity:0;transition:opacity .4s ease;}
+  .mobile-menu.open{display:flex;opacity:1;}
+  .mobile-menu a{font-family:'Cinzel',serif;font-size:clamp(1rem,5vw,1.4rem);letter-spacing:4px;
+    text-transform:uppercase;color:rgba(255,248,240,.8);text-decoration:none;transition:color .3s;position:relative;}
+  .mobile-menu a::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);
+    width:0;height:1px;background:var(--rose);transition:width .4s;box-shadow:0 0 8px var(--rose);}
+  .mobile-menu a:hover,.mobile-menu a:active{color:var(--rose);}
+  .mobile-menu a:hover::after,.mobile-menu a:active::after{width:80%;}
+  @media(max-width:700px){.nav-links{display:none;}.hamburger{display:flex;}}
+
+  /* ── SECTIONS ── */
+  section{min-height:100svh;position:relative;z-index:1;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;
+    padding:calc(var(--nav-h)+44px) clamp(16px,6vw,60px) 60px;overflow:hidden;}
+
+  /* ── HERO ── */
+  #home{background:radial-gradient(ellipse at 50% 40%,#2d0050 0%,#1a0030 40%,#0a0010 100%);}
+  .orb{position:absolute;border-radius:50%;filter:blur(70px);animation:float 8s ease-in-out infinite;pointer-events:none;}
+  .orb1{width:clamp(180px,60vw,500px);height:clamp(180px,60vw,500px);background:radial-gradient(circle,rgba(194,24,91,.32),transparent);top:-80px;left:-80px;}
+  .orb2{width:clamp(150px,50vw,400px);height:clamp(150px,50vw,400px);background:radial-gradient(circle,rgba(179,136,255,.2),transparent);bottom:-80px;right:-80px;animation-delay:-4s;}
+  .orb3{width:clamp(110px,38vw,280px);height:clamp(110px,38vw,280px);background:radial-gradient(circle,rgba(255,107,157,.18),transparent);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-2s;}
+  @keyframes float{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-20px) scale(1.05);}}
+
+  .hero-content{text-align:center;position:relative;z-index:2;width:100%;}
+  .hero-eyebrow{font-family:'Cinzel',serif;font-size:clamp(.52rem,2.2vw,.68rem);letter-spacing:clamp(3px,2vw,8px);
+    color:var(--rose);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fadeUp 1s .4s forwards;}
+  .hero-title{font-size:clamp(3rem,15vw,9.5rem);font-weight:300;line-height:.88;margin-bottom:18px;
+    opacity:0;animation:fadeUp 1s .7s forwards;}
+  .hero-title em{font-style:italic;background:linear-gradient(135deg,var(--rose),var(--gold),var(--lavender));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;
+    filter:drop-shadow(0 0 22px rgba(255,107,157,.5));}
+  .hero-urdu{font-family:'Dancing Script',cursive;font-size:clamp(1.1rem,4vw,1.8rem);
+    color:rgba(255,248,240,.7);font-style:italic;margin-bottom:10px;opacity:0;animation:fadeUp 1s .95s forwards;}
+  .hero-sub{font-size:clamp(.95rem,3vw,1.3rem);font-style:italic;color:rgba(255,248,240,.5);
+    max-width:460px;margin:0 auto 36px;line-height:1.9;opacity:0;animation:fadeUp 1s 1.15s forwards;padding:0 10px;}
+  .hero-cta{display:inline-block;padding:clamp(11px,3vw,15px) clamp(24px,7vw,48px);
+    border:1px solid rgba(255,107,157,.5);color:var(--cream);text-decoration:none;
+    font-family:'Cinzel',serif;font-size:clamp(.58rem,1.8vw,.68rem);letter-spacing:3px;text-transform:uppercase;
+    position:relative;overflow:hidden;transition:all .4s;opacity:0;animation:fadeUp 1s 1.38s forwards;}
+  .hero-cta::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#c2185b,var(--rose));
+    transform:scaleX(0);transform-origin:left;transition:transform .4s;z-index:-1;}
+  .hero-cta:hover,.hero-cta:active{border-color:var(--rose);color:#fff;box-shadow:0 0 26px rgba(255,107,157,.4);}
+  .hero-cta:hover::before,.hero-cta:active::before{transform:scaleX(1);}
+
+  .floating-hearts{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+  .heart{position:absolute;bottom:-50px;opacity:0;animation:riseHeart linear infinite;}
+  @keyframes riseHeart{0%{transform:translateY(0) rotate(0) scale(.5);opacity:0;}10%{opacity:.8;}90%{opacity:.2;}100%{transform:translateY(-115vh) rotate(360deg) scale(1.2);opacity:0;}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── SHARED ── */
+  .sec-tag{font-family:'Cinzel',serif;font-size:clamp(.52rem,1.8vw,.63rem);letter-spacing:clamp(4px,2vw,8px);
+    color:var(--rose);text-transform:uppercase;margin-bottom:13px;text-align:center;}
+  .sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,7.5vw,4.8rem);font-weight:300;
+    text-align:center;line-height:1.1;margin-bottom:15px;}
+  .sec-title span{font-style:italic;color:var(--rose);filter:drop-shadow(0 0 12px rgba(255,107,157,.5));}
+  .divider{width:80px;height:1px;background:linear-gradient(to right,transparent,var(--rose),transparent);
+    margin:0 auto 40px;box-shadow:0 0 10px rgba(255,107,157,.5);}
+
+  /* ── EYES ── */
+  #eyes{background:linear-gradient(180deg,#0a0010 0%,#0d001a 50%,#0a0010 100%);}
+  .tilt-wrap{perspective:1000px;margin:24px 0;width:100%;display:flex;justify-content:center;}
+  .tilt-card{width:min(680px,92vw);background:linear-gradient(135deg,rgba(45,0,80,.62),rgba(26,0,48,.82));
+    border:1px solid rgba(255,107,157,.22);border-radius:20px;padding:clamp(26px,7vw,58px);text-align:center;
+    transform-style:preserve-3d;transition:transform .12s ease;backdrop-filter:blur(12px);
+    box-shadow:0 28px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05);position:relative;}
+  .tilt-card::before{content:'';position:absolute;inset:-1px;border-radius:20px;
+    background:linear-gradient(135deg,rgba(255,107,157,.28),transparent,rgba(179,136,255,.18));z-index:-1;}
+  .eye-icon{font-size:clamp(2.2rem,7vw,3.8rem);margin-bottom:14px;display:block;animation:eyePulse 3s ease-in-out infinite;}
+  @keyframes eyePulse{0%,100%{filter:drop-shadow(0 0 10px rgba(255,107,157,.5));}50%{filter:drop-shadow(0 0 26px rgba(255,107,157,.95));transform:scale(1.08);}}
+
+  /* Sher card — special styling */
+  .sher-card{width:min(680px,92vw);margin:24px auto 0;
+    background:linear-gradient(160deg,rgba(50,0,90,.7),rgba(20,0,40,.9));
+    border:1px solid rgba(255,107,157,.3);border-radius:20px;
+    padding:clamp(28px,7vw,54px);text-align:center;
+    box-shadow:0 24px 70px rgba(255,107,157,.1),0 0 0 1px rgba(255,107,157,.08);
+    position:relative;overflow:hidden;}
+  .sher-card::before{content:'"';position:absolute;top:-20px;left:16px;font-size:10rem;
+    color:rgba(255,107,157,.06);font-family:'Cormorant Garamond',serif;line-height:1;pointer-events:none;}
+  .sher-label{font-family:'Cinzel',serif;font-size:clamp(.5rem,1.6vw,.6rem);letter-spacing:4px;
+    color:rgba(255,107,157,.6);text-transform:uppercase;margin-bottom:18px;display:block;}
+  .sher-text{font-size:clamp(1.1rem,3.2vw,1.55rem);font-style:italic;line-height:2.1;
+    color:var(--cream);margin-bottom:10px;}
+  .sher-urdu-sub{font-family:'Dancing Script',cursive;font-size:clamp(.9rem,2.5vw,1.1rem);
+    color:rgba(255,107,157,.7);margin-top:12px;display:block;font-style:italic;}
+
+  .q-text{font-size:clamp(.98rem,2.8vw,1.45rem);font-style:italic;line-height:1.95;color:var(--cream);margin-bottom:14px;}
+  .q-by{font-family:'Cinzel',serif;font-size:clamp(.5rem,1.6vw,.62rem);letter-spacing:3px;color:var(--rose);opacity:.7;}
+
+  .quotes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,90vw),1fr));
+    gap:15px;width:min(1020px,93vw);margin-top:26px;}
+  .q-card{background:linear-gradient(135deg,rgba(45,0,80,.4),rgba(26,0,48,.62));
+    border:1px solid rgba(255,107,157,.14);border-radius:16px;
+    padding:clamp(20px,5vw,36px) clamp(15px,4vw,26px);text-align:center;
+    transition:transform .4s,box-shadow .4s;position:relative;overflow:hidden;}
+  .q-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+    background:linear-gradient(to right,transparent,var(--rose),transparent);transform:scaleX(0);transition:transform .4s;}
+  .q-card:hover,.q-card:active{transform:translateY(-6px);box-shadow:0 18px 44px rgba(255,107,157,.12);}
+  .q-card:hover::after,.q-card:active::after{transform:scaleX(1);}
+  .q-num{font-family:'Cinzel',serif;font-size:clamp(1.8rem,5.5vw,2.8rem);color:rgba(255,107,157,.14);font-weight:600;line-height:1;margin-bottom:10px;}
+  .q-card p{font-style:italic;font-size:clamp(.88rem,2.3vw,1rem);line-height:1.85;color:rgba(255,248,240,.84);}
+  .q-card .urdu-line{font-family:'Dancing Script',cursive;font-size:clamp(.92rem,2.5vw,1.08rem);
+    color:rgba(255,107,157,.75);margin-top:10px;display:block;font-style:italic;line-height:1.7;}
+
+  /* ── CHARACTER ── */
+  #character{background:linear-gradient(180deg,#0a0010,#0f001f,#0a0010);}
+  .char-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(185px,90vw),1fr));
+    gap:14px;width:min(1020px,93vw);margin-top:26px;}
+  .char-card{background:linear-gradient(135deg,rgba(45,0,80,.5),rgba(10,0,16,.72));
+    border:1px solid rgba(255,107,157,.12);border-radius:20px;
+    padding:clamp(22px,5vw,36px) clamp(13px,3vw,20px);text-align:center;
+    transition:all .4s cubic-bezier(.175,.885,.32,1.275);}
+  .char-card:hover,.char-card:active{transform:translateY(-10px) scale(1.02);
+    border-color:rgba(255,107,157,.4);box-shadow:0 22px 48px rgba(255,107,157,.1);
+    background:linear-gradient(135deg,rgba(45,0,80,.82),rgba(26,0,48,.92));}
+  .char-icon{font-size:clamp(1.7rem,5vw,2.4rem);margin-bottom:11px;display:block;}
+  .char-title{font-family:'Cinzel',serif;font-size:clamp(.56rem,1.7vw,.68rem);letter-spacing:2px;color:var(--rose);text-transform:uppercase;margin-bottom:7px;}
+  .char-desc{font-size:clamp(.87rem,2.3vw,.98rem);color:rgba(255,248,240,.68);line-height:1.75;font-style:italic;}
+  .char-urdu{font-family:'Dancing Script',cursive;font-size:clamp(.85rem,2.3vw,.98rem);
+    color:rgba(255,107,157,.65);margin-top:8px;display:block;font-style:italic;}
+
+  /* ── VIDEOS ── */
+  #memories{background:linear-gradient(180deg,#0a0010,#120020,#0a0010);}
+  .videos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,90vw),1fr));
+    gap:20px;width:min(1040px,93vw);margin-top:30px;}
+  .video-wrap{position:relative;border-radius:20px;overflow:hidden;
+    background:linear-gradient(135deg,rgba(45,0,80,.5),rgba(10,0,16,.8));
+    border:1px solid rgba(255,107,157,.18);
+    box-shadow:0 20px 60px rgba(0,0,0,.4);transition:transform .4s,box-shadow .4s;}
+  .video-wrap:hover,.video-wrap:active{transform:translateY(-6px);box-shadow:0 30px 70px rgba(255,107,157,.12);}
+  .video-wrap iframe{width:100%;aspect-ratio:9/16;border:none;display:block;}
+  .video-caption{padding:14px 18px;font-family:'Dancing Script',cursive;
+    font-size:clamp(.9rem,2.5vw,1.05rem);color:rgba(255,107,157,.8);
+    text-align:center;font-style:italic;border-top:1px solid rgba(255,107,157,.1);}
+
+  /* ── LETTER ── */
+  #love{background:linear-gradient(180deg,#0a0010,#150025,#0a0010);}
+  .letter-wrap{width:min(720px,93vw);}
+  .letter-paper{background:linear-gradient(160deg,rgba(30,0,50,.92),rgba(15,0,30,.96));
+    border:1px solid rgba(255,107,157,.2);border-radius:4px;
+    padding:clamp(26px,7vw,68px) clamp(20px,6vw,78px);position:relative;
+    box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 60px rgba(255,107,157,.05);}
+  .letter-paper::before{content:'';position:absolute;top:0;left:clamp(26px,7vw,58px);
+    width:1px;height:100%;background:rgba(255,107,157,.1);}
+  .l-date{font-family:'Dancing Script',cursive;font-size:clamp(.82rem,2.3vw,.98rem);color:rgba(255,107,157,.6);margin-bottom:20px;display:block;}
+  .l-dear{font-family:'Dancing Script',cursive;font-size:clamp(1.35rem,4.8vw,1.95rem);color:var(--rose);margin-bottom:17px;display:block;}
+  .l-body{font-size:clamp(.9rem,2.3vw,1.12rem);line-height:2.15;color:rgba(255,248,240,.84);margin-bottom:20px;}
+  .l-body strong{color:var(--rose);font-weight:400;}
+  .l-urdu{font-family:'Dancing Script',cursive;font-size:clamp(1rem,3vw,1.25rem);
+    color:rgba(255,107,157,.85);font-style:italic;display:block;margin:18px 0;
+    line-height:2;padding:16px 20px;border-left:2px solid rgba(255,107,157,.3);
+    background:rgba(255,107,157,.04);border-radius:0 8px 8px 0;}
+  .l-sign{font-family:'Dancing Script',cursive;font-size:clamp(1.1rem,3.8vw,1.5rem);color:var(--rose);margin-top:20px;display:block;}
+  .l-heart{position:absolute;top:15px;right:17px;font-size:1.05rem;opacity:.38;animation:hb 1.5s ease-in-out infinite;}
+  @keyframes hb{0%,100%{transform:scale(1);}50%{transform:scale(1.3);}}
+
+  /* ── FOREVER ── */
+  #forever{background:radial-gradient(ellipse at center,#1a0030 0%,#0a0010 70%);text-align:center;}
+  .forever-text{font-size:clamp(1.05rem,3.2vw,1.75rem);font-style:italic;max-width:580px;
+    line-height:2.05;color:rgba(255,248,240,.8);margin:20px auto;padding:0 10px;}
+  .forever-hl{color:var(--rose);filter:drop-shadow(0 0 10px rgba(255,107,157,.6));}
+  .forever-urdu{font-family:'Dancing Script',cursive;font-size:clamp(1.1rem,3.5vw,1.6rem);
+    color:rgba(255,107,157,.8);font-style:italic;margin:10px auto 20px;display:block;
+    max-width:520px;padding:0 10px;}
+  .ring{width:clamp(130px,36vw,190px);height:clamp(130px,36vw,190px);margin:24px auto;position:relative;animation:spin 20s linear infinite;}
+  .ring svg{width:100%;height:100%;}
+  @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  .ring-heart{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    font-size:clamp(1.6rem,5vw,2.4rem);animation:hb 1.5s ease-in-out infinite,spin 20s linear infinite reverse;}
+
+  /* ── FOOTER ── */
+  footer{background:rgba(10,0,16,.92);border-top:1px solid rgba(255,107,157,.1);
+    padding:clamp(20px,4vw,38px) 20px;text-align:center;position:relative;z-index:1;}
+  footer p{font-family:'Dancing Script',cursive;font-size:clamp(.95rem,3.2vw,1.15rem);color:rgba(255,107,157,.6);}
+
+  /* ── SCROLL REVEAL ── */
+  .reveal{opacity:0;transform:translateY(32px);transition:opacity .85s ease,transform .85s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  .d1{transition-delay:.08s;}.d2{transition-delay:.2s;}.d3{transition-delay:.34s;}.d4{transition-delay:.48s;}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:480px){
+    section{padding-top:calc(var(--nav-h)+24px);padding-bottom:40px;}
+    .char-grid{grid-template-columns:1fr 1fr;}
+    .quotes-grid{grid-template-columns:1fr;}
+    .videos-grid{grid-template-columns:1fr;}
+    .divider{margin-bottom:26px;}
+  }
+  @media(max-width:340px){.char-grid{grid-template-columns:1fr;}}
+  @media(hover:none){
+    .q-card:active,.char-card:active,.video-wrap:active{transform:scale(.98);}
+    .hero-cta:active{transform:scale(.97);}
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+<canvas id="stars-canvas"></canvas>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-logo">
+    Sb Maya Hai
+    <span></span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#eyes">Aankhein</a></li>
+    <li><a href="#character">Imaginations</a></li>
+    <li><a href="#memories">Srf Tum</a></li>
+    <li><a href="#love">Dil Ki Baat</a></li>
+    <li><a href="#forever">Hamesha</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Drawer -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home"      class="mob-link">Home</a>
+  <a href="#eyes"      class="mob-link">Aankhein</a>
+  <a href="#character" class="mob-link">Imaginations</a>
+  <a href="#memories"  class="mob-link">Srf Tum</a>
+  <a href="#love"      class="mob-link">Dil Ki Baat</a>
+  <a href="#forever"   class="mob-link">Hamesha</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section id="home">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="floating-hearts" id="hearts"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">✦ ek dil ki aawaaz ✦</p>
+    <h1 class="hero-title">
+      My ART Of<br>
+      <em>Expressing Feelings</em>
+    </h1>
+    <p class="hero-urdu">Tum ho to ye duniya khoobsurat lagti hai...</p>
+    <p class="hero-sub">In a world full of noise, you are the only silence I want to live in.</p>
+    <a href="#eyes" class="hero-cta"> ♡</a>
+  </div>
+</section>
+
+<!-- ══ HER EYES / AANKHEIN ══ -->
+<section id="eyes">
+  <p class="sec-tag reveal"></p>
+  <h2 class="sec-title reveal d1">Tumhari <span>Aankhein</span></h2>
+  <div class="divider reveal d2"></div>
+
+  <!-- The Sher — main featured card -->
+  <div class="tilt-wrap reveal d2" id="eyes3d">
+    <div class="tilt-card" id="eyesCard">
+      <span class="eye-icon">✨</span>
+      <p class="q-text">
+        "Mujhe sb se zyada pasand tumhari ye aankhein hain,<br>
+        kyunke in mein mn jitna dekhna chahun,<br>
+        mujhe kuch dikhta hi nahi <br>
+        jaise waqt ruk sa jata hai mera."
+      </p>
+      
+    </div>
+  </div>
+
+  <!-- Sher card with Urdu feel -->
+  <div class="sher-card reveal d3">
+    
+    <p class="sher-text">
+      Tumhari nazaron mein wo khamoshi hai,<br>
+      jo hazaar alfaz se bhi zyada kehti hai.<br>
+      Teri Soorat se hai Alam mein Baharon ko Sabat <br>
+      Teri Anknhon ke Siwa Dunya mn Rakha kya hai.
+    </p>
+    <span class="sher-urdu-sub">~ Neend nahi aati jab yaad aati hain woh aankhein ~</span>
+  </div>
+
+  <div class="quotes-grid">
+    <div class="q-card reveal d1">
+      <div class="q-num">01</div>
+      <p>"Your eyes hold entire galaxies — I could spend a thousand lifetimes lost in them and still beg for more."</p>
+      <span class="urdu-line">Your Eyes.. Oh Allah how beautiful you are.</span>
+    </div>
+    <div class="q-card reveal d2">
+      <div class="q-num">02</div>
+      <p>"The moment you looked at me, the whole world went quiet. Only your eyes spoke — in a language my heart already knew."</p>
+      <span class="urdu-line">Your Eyes distract me and how beautiful your disttraction are...</span>
+    </div>
+    <div class="q-card reveal d3">
+      <div class="q-num">03</div>
+      <p>"Chehra Dkh Kar to Dil lagaya hi nai mein ne.Haan Tumahri ankhonn par kai bar jaan lutaiye ha mein ne."</p>
+      <span class="urdu-line">One life..One Love..One person..Always You..</span>
+    </div>
+  
+</section>
+
+<!-- ══ HER SOUL / ROOH ══ -->
+<section id="character">
+  <h2 class="sec-title reveal d1"> <span>Imaginations</span></h2>
+  <div class="divider reveal d2"></div>
+S
+  <div class="char-grid">
+    <div class="char-card reveal d1">
+      <span class="char-icon">🌸</span>
+      <p class="char-title"Your Smile</p>
+      <p class="char-desc">Your Smile is the Most beautiful thing my eyes have ever seen.Aap jab muskarati ho to lgta ha jese Hawaon ka rukh badal sa gya ho..</p>
+   
+    </div>
+    
+    <div class="char-card reveal d4">
+      <span class="char-icon">💫</span>
+      <p class="char-title">My Promise</p>
+      <p class="char-desc">I can't promise to love you perfectly.But i can promise to love you endlessly .I loved you through every version of Us and every life we never lived.. </p>
+      
+    </div>
+    <div class="char-card reveal d1">
+      <span class="char-icon">🦋</span>
+      <p class="char-title">Ada</p>
+      <p class="char-desc">You are not like anyone at all.You are nothing but the light of sun or the Glow of Moon.You are way more beautifull than all details of Beauty..</p>
+     
+    </div>
+   
+</section>
+
+<!-- ══ MEMORIES / YAADEIN — Instagram Reels ══ -->
+<section id="memories">
+  <h2 class="sec-title reveal d1"> <span>Sirf TUM</span></h2>
+  <div class="divider reveal d2"></div>
+
+  <div class="videos-grid">
+    <div class="video-wrap reveal d1">
+      <iframe
+        src="https://www.instagram.com/reel/DWRuy1gE1oM/embed/"
+        allowfullscreen
+        scrolling="no"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        loading="lazy">
+      </iframe>
+      <div class="video-caption">Ek pal jo dil mein utar gaya... 💗</div>
+    </div>
+    <div class="video-wrap reveal d2">
+      <iframe
+        src="https://www.instagram.com/reel/DWSpJV0E9UC/embed/"
+        allowfullscreen
+        scrolling="no"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        loading="lazy">
+      </iframe>
+      <div class="video-caption">Teri yaad mein kho jaata hoon... ✨</div>
+    </div>
+    <div class="video-wrap reveal d3">
+      <iframe
+        src="https://www.instagram.com/reel/DVmCx35iKqD/embed/"
+        allowfullscreen
+        scrolling="no"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        loading="lazy">
+      </iframe>
+      <div class="video-caption">Har lamha tera naam likhta hai... 🌸</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LOVE LETTER / DIL KI BAAT ══ -->
+<section id="love">
+  <p class="sec-tag reveal">✦ dil ke andhar se ✦</p>
+  <h2 class="sec-title reveal d1">Dil Ki <span>Baat</span></h2>
+  <div class="divider reveal d2"></div>
+
+  <div class="letter-wrap reveal d2">
+    <div class="letter-paper">
+      <span class="l-heart">💗</span>
+      <span class="l-date">Mere Alfaz...</span>
+      <span class="l-dear"></span>
+      <p class="l-body">
+          Mujhe tum se kuch kehna ha, shyd der hogye par jhoot nai ha.Mujhe nai pta ye bolna chaiye ya nai
+          par sach ye ha mein tumhen boht<strong>pasand krta hoon.</strong> 
+          Main nahi jaanta kaise kahu ye baat zuban se  alfaz hamesha chhote lag jaate hain
+          jab baat tumhari ho. Isliye yahan likha hai, us jagah jahan shyd hi koi karta ho.. mje phli nazar mn hi tum  <strong>boht pasand</strong> agaye thi.<br>
+       <br>
+         Agar tum poochogi kyun to shyd mein perfect reason na de paon par itna janta hun meri feelings
+         sachi han.
+    
+      </p>
+     
+      <p class="l-body">
+       Main tumhen hamesha khoosh dekhna chahta hun.Or b boht kuch ha jo shyd words mein na btaya ja sake
+       Muje faraq nai parta agr tum mjhe reject krdo.Par ek bat hamesha sav rahegi <strong>Mein tumhein psand karta hoon...</strong>
+        
+      </p>
+      <span class="l-sign">♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOREVER / HAMESHA ══ -->
+<section id="forever">
+  <p class="sec-tag reveal"></p>
+  <h2 class="sec-title reveal d1"> <span>Hamesha</span></h2>
+  <div class="divider reveal d2"></div>
+
+  <div class="ring reveal d2">
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="90" stroke="url(#rg2)" stroke-width="1" stroke-dasharray="4 8"/>
+      <circle cx="100" cy="100" r="74" stroke="rgba(255,107,157,.18)" stroke-width=".5"/>
+      <circle cx="100" cy="10"  r="3" fill="#ff6b9d" opacity=".9"/>
+      <circle cx="175" cy="55"  r="2" fill="#ffd700" opacity=".7"/>
+      <circle cx="175" cy="145" r="3" fill="#b388ff" opacity=".8"/>
+      <circle cx="100" cy="190" r="2" fill="#ff6b9d" opacity=".6"/>
+      <circle cx="25"  cy="145" r="3" fill="#ffd700" opacity=".9"/>
+      <circle cx="25"  cy="55"  r="2" fill="#ff6b9d" opacity=".7"/>
+      <defs>
+        <linearGradient id="rg2" x1="0" y1="0" x2="200" y2="200">
+          <stop offset="0%"   stop-color="#ff6b9d"/>
+          <stop offset="50%"  stop-color="#ffd700"/>
+          <stop offset="100%" stop-color="#b388ff"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="ring-heart">💗</div>
+  </div>
+
+ 
+  <span class="forever-urdu reveal d3">
+    "You Are Definitely Special."
+  </span>
+
+  <div class="quotes-grid reveal d3" style="max-width:720px;">
+    <div class="q-card">
+      <div class="q-num"></div>
+      <p>"You are not just someone I love. You are someone I would choose, again and again, in every version of this life."</p>
+      
+    </div>
+    <div class="q-card">
+      <div class="q-num"></div>
+      <p>"I choosed to love you in loneliness, for in loneliness no one owns you but me.. ."</p>
+      
+    </div>
+  </div>
+</section>
+
+<footer>
+ 
+</footer>
+
+<script>
+/* ── Cursor ── */
+const CE=document.getElementById('cursor'),TE=document.getElementById('cursor-trail');
+let mx=0,my=0,tx=0,ty=0;
+if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;CE.style.left=mx+'px';CE.style.top=my+'px';});
+  setInterval(()=>{tx+=(mx-tx)*.15;ty+=(my-ty)*.15;TE.style.left=tx+'px';TE.style.top=ty+'px';},10);
+}
+
+/* ── Stars ── */
+const cv=document.getElementById('stars-canvas'),cx2=cv.getContext('2d');
+let W,H,stars=[];
+function rsz(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+rsz();window.addEventListener('resize',rsz);
+for(let i=0;i<190;i++)stars.push({x:Math.random()*2200,y:Math.random()*2200,r:Math.random()*1.4+.2,a:Math.random(),sp:Math.random()*.004+.001,c:['#ff6b9d','#ffd700','#b388ff','#fff'][Math.floor(Math.random()*4)]});
+function drw(){cx2.clearRect(0,0,W,H);stars.forEach(s=>{s.a+=s.sp;cx2.save();cx2.globalAlpha=Math.abs(Math.sin(s.a))*.72+.1;cx2.fillStyle=s.c;cx2.shadowBlur=5;cx2.shadowColor=s.c;cx2.beginPath();cx2.arc(s.x%W,s.y%H,s.r,0,Math.PI*2);cx2.fill();cx2.restore();});requestAnimationFrame(drw);}
+drw();
+
+/* ── Floating Hearts ── */
+const hC=document.getElementById('hearts'),hE=['💗','💖','💕','✨','🌸','💓','🌹'];
+function spH(){const h=document.createElement('div');h.className='heart';h.textContent=hE[Math.floor(Math.random()*hE.length)];h.style.left=Math.random()*100+'%';h.style.animationDuration=(Math.random()*9+6)+'s';h.style.fontSize=(Math.random()*1.1+.7)+'rem';hC.appendChild(h);setTimeout(()=>h.remove(),15000);}
+setInterval(spH,1500);for(let i=0;i<6;i++)setTimeout(spH,i*400);
+
+/* ── 3D Tilt desktop ── */
+const ec=document.getElementById('eyesCard'),e3=document.getElementById('eyes3d');
+if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  e3.addEventListener('mousemove',e=>{const r=ec.getBoundingClientRect();ec.style.transform=`rotateX(${(e.clientY-(r.top+r.height/2))/20}deg) rotateY(${((r.left+r.width/2)-e.clientX)/20}deg) scale(1.02)`;});
+  e3.addEventListener('mouseleave',()=>{ec.style.transform='rotateX(0) rotateY(0) scale(1)';});
+}
+/* ── 3D Tilt touch ── */
+e3.addEventListener('touchmove',e=>{const t=e.touches[0],r=ec.getBoundingClientRect();ec.style.transform=`rotateX(${((t.clientY-(r.top+r.height/2))/r.height)*12}deg) rotateY(${(((r.left+r.width/2)-t.clientX)/r.width)*12}deg) scale(1.02)`;},{passive:true});
+e3.addEventListener('touchend',()=>{ec.style.transform='rotateX(0) rotateY(0) scale(1)';});
+
+/* ── Scroll Reveal ── */
+const revs=document.querySelectorAll('.reveal');
+const ro=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.07});
+revs.forEach(r=>ro.observe(r));
+
+/* ── Active Nav ── */
+const secs=document.querySelectorAll('section[id]'),navAs=document.querySelectorAll('.nav-links a');
+const no=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));});},{threshold:.4});
+secs.forEach(s=>no.observe(s));
+
+/* ── Hamburger ── */
+const hbtn=document.getElementById('hamburger'),mm=document.getElementById('mobileMenu');
+function tog(o){hbtn.classList.toggle('open',o);if(o){mm.style.display='flex';requestAnimationFrame(()=>mm.classList.add('open'));}else{mm.classList.remove('open');setTimeout(()=>{mm.style.display='none';},400);}document.body.style.overflow=o?'hidden':'';}
+hbtn.addEventListener('click',()=>tog(!hbtn.classList.contains('open')));
+document.querySelectorAll('.mob-link').forEach(a=>a.addEventListener('click',()=>tog(false)));
+mm.addEventListener('click',e=>{if(e.target===mm)tog(false);});
+</script>
+</body>
+</html>
