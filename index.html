@@ -171,15 +171,47 @@
   #memories{background:linear-gradient(180deg,#0a0010,#120020,#0a0010);}
   .videos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,90vw),1fr));
     gap:20px;width:min(1040px,93vw);margin-top:30px;}
-  .video-wrap{position:relative;border-radius:20px;overflow:hidden;
-    background:linear-gradient(135deg,rgba(45,0,80,.5),rgba(10,0,16,.8));
-    border:1px solid rgba(255,107,157,.18);
-    box-shadow:0 20px 60px rgba(0,0,0,.4);transition:transform .4s,box-shadow .4s;}
-  .video-wrap:hover,.video-wrap:active{transform:translateY(-6px);box-shadow:0 30px 70px rgba(255,107,157,.12);}
-  .video-wrap iframe{width:100%;aspect-ratio:9/16;border:none;display:block;}
-  .video-caption{padding:14px 18px;font-family:'Dancing Script',cursive;
-    font-size:clamp(.9rem,2.5vw,1.05rem);color:rgba(255,107,157,.8);
-    text-align:center;font-style:italic;border-top:1px solid rgba(255,107,157,.1);}
+  .video-wrap{position:relative;border-radius:26px;overflow:hidden;
+    background:
+      radial-gradient(circle at top,rgba(255,215,0,.16),transparent 36%),
+      linear-gradient(160deg,rgba(47,0,83,.88),rgba(16,0,28,.96));
+    border:1px solid rgba(255,107,157,.2);
+    box-shadow:0 24px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);
+    transition:transform .4s,box-shadow .4s,border-color .4s;}
+  .video-wrap::before{content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 18%,transparent 78%,rgba(255,107,157,.08));
+    pointer-events:none;z-index:1;}
+  .video-wrap:hover,.video-wrap:active{transform:translateY(-8px);border-color:rgba(255,107,157,.42);box-shadow:0 34px 82px rgba(194,24,91,.18);}
+  .video-player{position:relative;aspect-ratio:9/16;background:
+    radial-gradient(circle at top,rgba(255,107,157,.25),transparent 30%),
+    linear-gradient(180deg,#1e022f,#09000f);}
+  .video-element{width:100%;height:100%;display:block;object-fit:cover;background:#09000f;}
+  .video-overlay{position:absolute;inset:0;display:grid;place-items:center;z-index:2;
+    background:
+      linear-gradient(180deg,rgba(10,0,16,.18) 0%,rgba(10,0,16,.1) 45%,rgba(10,0,16,.65) 100%),
+      radial-gradient(circle at 50% 35%,rgba(255,107,157,.28),transparent 28%);
+    cursor:pointer;transition:opacity .3s ease,visibility .3s ease;}
+  .video-wrap.playing .video-overlay{opacity:0;visibility:hidden;pointer-events:none;}
+  .video-overlay::after{content:'';position:absolute;inset:14px;border:1px solid rgba(255,255,255,.08);
+    border-radius:22px;pointer-events:none;}
+  .video-play{width:82px;height:82px;border-radius:50%;border:1px solid rgba(255,255,255,.16);
+    background:radial-gradient(circle at 30% 30%,rgba(255,215,0,.45),rgba(255,107,157,.88));
+    box-shadow:0 16px 34px rgba(255,107,157,.35);display:grid;place-items:center;
+    backdrop-filter:blur(10px);}
+  .video-play::before{content:'';margin-left:6px;border-top:12px solid transparent;border-bottom:12px solid transparent;border-left:18px solid #fff;}
+  .video-controls{position:absolute;left:14px;right:14px;bottom:14px;z-index:3;
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;
+    background:rgba(10,0,16,.72);border:1px solid rgba(255,107,157,.18);
+    backdrop-filter:blur(16px);opacity:0;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease;}
+  .video-wrap.playing .video-controls,.video-wrap:hover .video-controls,.video-wrap:focus-within .video-controls{opacity:1;transform:translateY(0);}
+  .video-btn{width:38px;height:38px;border:none;border-radius:50%;display:grid;place-items:center;
+    background:rgba(255,107,157,.14);color:var(--cream);cursor:pointer;transition:background .2s ease,transform .2s ease;}
+  .video-btn:hover,.video-btn:active{background:rgba(255,107,157,.28);transform:scale(1.05);}
+  .video-btn span{font-size:1rem;line-height:1;}
+  .video-progress{flex:1;height:4px;border-radius:999px;appearance:none;background:rgba(255,248,240,.14);outline:none;cursor:pointer;}
+  .video-progress::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 3px rgba(255,107,157,.22);}
+  .video-progress::-moz-range-thumb{width:14px;height:14px;border:none;border-radius:50%;background:var(--rose);box-shadow:0 0 0 3px rgba(255,107,157,.22);}
+  .video-progress::-moz-range-track{height:4px;border-radius:999px;background:rgba(255,248,240,.14);}
 
   /* ── LETTER ── */
   #love{background:linear-gradient(180deg,#0a0010,#150025,#0a0010);}
@@ -349,11 +381,10 @@
 <section id="character">
   <h2 class="sec-title reveal d1"> <span>Imaginations</span></h2>
   <div class="divider reveal d2"></div>
-S
   <div class="char-grid">
     <div class="char-card reveal d1">
       <span class="char-icon">🌸</span>
-      <p class="char-title"Your Smile</p>
+      <p class="char-title">Your Smile</p>
       <p class="char-desc">Your Smile is the Most beautiful thing my eyes have ever seen.Aap jab muskarati ho to lgta ha jese Hawaon ka rukh badal sa gya ho..</p>
    
     </div>
@@ -380,34 +411,52 @@ S
 
   <div class="videos-grid">
     <div class="video-wrap reveal d1">
-      <iframe
-        src="https://www.instagram.com/reel/DWRuy1gE1oM/embed/"
-        allowfullscreen
-        scrolling="no"
-        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-        loading="lazy">
-      </iframe>
-      <div class="video-caption">Ek pal jo dil mein utar gaya... 💗</div>
+      <div class="video-player">
+        <video class="video-element" playsinline preload="metadata">
+          <source src="videos/video-1.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay" role="button" tabindex="0" aria-label="Play video">
+          <div class="video-play"></div>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn video-toggle" type="button" aria-label="Play or pause video"><span>P</span></button>
+          <input class="video-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
+          <button class="video-btn video-mute" type="button" aria-label="Mute or unmute video"><span>M</span></button>
+          <button class="video-btn video-fullscreen" type="button" aria-label="Fullscreen video"><span>F</span></button>
+        </div>
+      </div>
     </div>
     <div class="video-wrap reveal d2">
-      <iframe
-        src="https://www.instagram.com/reel/DWSpJV0E9UC/embed/"
-        allowfullscreen
-        scrolling="no"
-        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-        loading="lazy">
-      </iframe>
-      <div class="video-caption">Teri yaad mein kho jaata hoon... ✨</div>
+      <div class="video-player">
+        <video class="video-element" playsinline preload="metadata">
+          <source src="videos/video-2.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay" role="button" tabindex="0" aria-label="Play video">
+          <div class="video-play"></div>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn video-toggle" type="button" aria-label="Play or pause video"><span>P</span></button>
+          <input class="video-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
+          <button class="video-btn video-mute" type="button" aria-label="Mute or unmute video"><span>M</span></button>
+          <button class="video-btn video-fullscreen" type="button" aria-label="Fullscreen video"><span>F</span></button>
+        </div>
+      </div>
     </div>
     <div class="video-wrap reveal d3">
-      <iframe
-        src="https://www.instagram.com/reel/DVmCx35iKqD/embed/"
-        allowfullscreen
-        scrolling="no"
-        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-        loading="lazy">
-      </iframe>
-      <div class="video-caption">Har lamha tera naam likhta hai... 🌸</div>
+      <div class="video-player">
+        <video class="video-element" playsinline preload="metadata">
+          <source src="videos/video-3.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay" role="button" tabindex="0" aria-label="Play video">
+          <div class="video-play"></div>
+        </div>
+        <div class="video-controls">
+          <button class="video-btn video-toggle" type="button" aria-label="Play or pause video"><span>P</span></button>
+          <input class="video-progress" type="range" min="0" max="100" value="0" aria-label="Video progress">
+          <button class="video-btn video-mute" type="button" aria-label="Mute or unmute video"><span>M</span></button>
+          <button class="video-btn video-fullscreen" type="button" aria-label="Fullscreen video"><span>F</span></button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -543,6 +592,91 @@ function tog(o){hbtn.classList.toggle('open',o);if(o){mm.style.display='flex';re
 hbtn.addEventListener('click',()=>tog(!hbtn.classList.contains('open')));
 document.querySelectorAll('.mob-link').forEach(a=>a.addEventListener('click',()=>tog(false)));
 mm.addEventListener('click',e=>{if(e.target===mm)tog(false);});
+
+/* ── Video Cards ── */
+const videoCards=document.querySelectorAll('.video-wrap');
+function pauseOtherVideos(activeCard){
+  videoCards.forEach(card=>{
+    const video=card.querySelector('.video-element');
+    const toggle=card.querySelector('.video-toggle span');
+    const progress=card.querySelector('.video-progress');
+    if(card!==activeCard&&video){
+      video.pause();
+      video.currentTime=0;
+      card.classList.remove('playing');
+      if(toggle)toggle.textContent='P';
+      if(progress)progress.value=0;
+    }
+  });
+}
+videoCards.forEach(card=>{
+  const video=card.querySelector('.video-element');
+  const overlay=card.querySelector('.video-overlay');
+  const toggle=card.querySelector('.video-toggle');
+  const toggleLabel=card.querySelector('.video-toggle span');
+  const mute=card.querySelector('.video-mute');
+  const muteLabel=card.querySelector('.video-mute span');
+  const fullscreen=card.querySelector('.video-fullscreen');
+  const progress=card.querySelector('.video-progress');
+  if(!video||!overlay||!toggle||!mute||!fullscreen||!progress)return;
+
+  video.controls=false;
+
+  const updateToggle=()=>{
+    toggleLabel.textContent=video.paused?'P':'||';
+    card.classList.toggle('playing',!video.paused);
+  };
+  const updateMute=()=>{
+    muteLabel.textContent=video.muted?'U':'M';
+  };
+  const updateProgress=()=>{
+    const value=video.duration?(video.currentTime/video.duration)*100:0;
+    progress.value=value;
+    progress.style.background=`linear-gradient(to right,var(--rose) 0%,var(--rose) ${value}%,rgba(255,248,240,.14) ${value}%,rgba(255,248,240,.14) 100%)`;
+  };
+  const playVideo=()=>{
+    pauseOtherVideos(card);
+    video.play();
+  };
+
+  overlay.addEventListener('click',playVideo);
+  overlay.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){
+      e.preventDefault();
+      playVideo();
+    }
+  });
+  toggle.addEventListener('click',()=>{
+    if(video.paused)playVideo();
+    else video.pause();
+  });
+  mute.addEventListener('click',()=>{
+    video.muted=!video.muted;
+    updateMute();
+  });
+  fullscreen.addEventListener('click',()=>{
+    const target=card.querySelector('.video-player');
+    if(document.fullscreenElement)document.exitFullscreen();
+    else if(target.requestFullscreen)target.requestFullscreen();
+  });
+  progress.addEventListener('input',()=>{
+    if(video.duration)video.currentTime=(progress.value/100)*video.duration;
+  });
+  video.addEventListener('play',updateToggle);
+  video.addEventListener('pause',updateToggle);
+  video.addEventListener('timeupdate',updateProgress);
+  video.addEventListener('loadedmetadata',updateProgress);
+  video.addEventListener('ended',()=>{
+    video.currentTime=0;
+    updateToggle();
+    updateProgress();
+  });
+  updateToggle();
+  updateMute();
+  updateProgress();
+});
 </script>
 </body>
 </html>
+
+
